@@ -1,0 +1,24 @@
+wget http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tar.bz2
+tar -jxf Python-2.7.5.tar.bz2
+export RFS=/RFS/
+tar -jxf Python-2.7.5.tar.bz2
+export CURSESFLAGS="pkg-config --cflags ncursesw"
+
+make distclean
+
+./configure --host=arm-none-linux-gnueabi --build=arm-linux  --target=arm --prefix=/ --disable-ipv6 ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no  ac_cv_have_long_long_format=yes
+
+sed -i -e 's%\([[:space:]]\)\(PYTHONPATH=$(DESTDIR)$(LIBDEST)\)%\1-\2%' Makefile
+
+make --jobs=8 CFLAGS="-g0 -Os -s -I${RFS}/usr/include -fdata-sections -ffunction-sections" LDFLAGS='-L${RFS}/usr/lib -L${RFS}/lib'
+
+Push following bin and libs to the board.
+1. Application name -> python 
+2. All libs under Lib/.
+
+Now on board
+#export PYTHONPATH=/your_directory_to_python_Lib
+#export PYTHONHOME=/your_directory_to_python
+#cd $PYTHONHOME
+#./python    
+   "ENJOY PYTHON"
